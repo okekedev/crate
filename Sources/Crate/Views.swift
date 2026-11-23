@@ -110,17 +110,53 @@ struct ContentView: View {
     }
 }
 
+/// The instructions for letting Claude play the app: one command to run once, then just ask.
+struct ConnectBox: View {
+    let seen: Bool
+    @State private var copied = false
+    static let command = "claude mcp add --transport http crate http://127.0.0.1:\(AppModel.port)/mcp"
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Let Claude play Crate").font(.system(size: 15, weight: .bold))
+            Text("Crate works on its own: click notes into the piano roll or play them on the letter keys. Connect Claude and you can also ask for parts in plain words and it writes them here while you listen.")
+                .font(.system(size: 12)).fixedSize(horizontal: false, vertical: true)
+            Text("1. With Claude Code installed, run this once in Terminal:").font(.system(size: 12, weight: .semibold))
+            HStack(spacing: 8) {
+                Text(ConnectBox.command).font(.system(size: 11, design: .monospaced)).textSelection(.enabled).lineLimit(1)
+                    .padding(.horizontal, 8).padding(.vertical, 6).background(Color.primary.opacity(0.08)).clipShape(RoundedRectangle(cornerRadius: 4))
+                Button(copied ? "Copied" : "Copy") {
+                    NSPasteboard.general.clearContents(); NSPasteboard.general.setString(ConnectBox.command, forType: .string); copied = true
+                }
+            }
+            Text("2. Keep Crate open, start Claude Code, and ask. For example: \u{201C}an 8 bar melody in C# minor\u{201D}, \u{201C}three versions of a bass that follows the kick\u{201D}, \u{201C}master it and give me three options\u{201D}.")
+                .font(.system(size: 12)).fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 6) {
+                Circle().fill(seen ? Color.green : Color.secondary.opacity(0.5)).frame(width: 9, height: 9)
+                Text(seen ? "Claude has connected since Crate was opened." : "Claude has not connected yet.").font(.system(size: 12))
+            }
+            Text("Only apps on this Mac can connect, and only while Crate is open.").font(.system(size: 11)).foregroundStyle(.secondary)
+        }
+        .padding(16).frame(width: 460, alignment: .leading)
+    }
+}
+
 struct TopBar: View {
     @EnvironmentObject var m: AppModel
     @Environment(\.openWindow) private var openWindow
+    @State private var showConnect = false
     var body: some View {
         HStack(spacing: 14) {
             VStack(alignment: .leading, spacing: 3) {
                 Text("CRATE").font(.system(size: 28, weight: .heavy)).tracking(7).lineLimit(1).fixedSize()
-                HStack(spacing: 6) {
-                    Circle().fill(m.claudeSeen ? Theme.hues[0] : Theme.key).frame(width: 9, height: 9)
-                    Tag(m.claudeSeen ? "Claude connected" : "Claude: port \(AppModel.port)")
+                Button { showConnect.toggle() } label: {
+                    HStack(spacing: 6) {
+                        Circle().fill(m.claudeSeen ? Theme.hues[0] : Theme.key).frame(width: 9, height: 9)
+                        Tag(m.claudeSeen ? "Claude connected" : "Connect Claude")
+                        Image(systemName: "questionmark.circle").font(.system(size: 11)).foregroundStyle(Theme.soft)
+                    }.contentShape(Rectangle())
                 }
+                .buttonStyle(.plain).help("How to let Claude play this app")
+                .popover(isPresented: $showConnect, arrowEdge: .bottom) { ConnectBox(seen: m.claudeSeen) }
             }
             VStack(alignment: .leading, spacing: 2) {
                 HStack {

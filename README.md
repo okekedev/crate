@@ -6,15 +6,12 @@ A small music app for the Mac that Claude can play. A song is a stack of tracks.
 
 ## Listen
 
-Two songs made in Crate. Each video is the app's own view of the song with the play line moving across it.
+Two songs made in Crate. Each video is the app's own view of the song with the play line moving across it. Click a picture to open the video, or take the MP3.
 
-**Lofi E Minor** ([MP3](songs/lofi-e-minor.mp3))
-
-<video src="songs/lofi-e-minor.mp4" controls width="100%"></video>
-
-**C Sharp Minor Idea** ([MP3](songs/c-sharp-minor-idea.mp3))
-
-<video src="songs/c-sharp-minor-idea.mp4" controls width="100%"></video>
+| Lofi E Minor | C Sharp Minor Idea |
+|---|---|
+| [![Lofi E Minor, the song laid out in Crate](songs/lofi-e-minor.jpg)](songs/lofi-e-minor.mp4) | [![C Sharp Minor Idea, the song laid out in Crate](songs/c-sharp-minor-idea.jpg)](songs/c-sharp-minor-idea.mp4) |
+| [Video](songs/lofi-e-minor.mp4) · [MP3](songs/lofi-e-minor.mp3) | [Video](songs/c-sharp-minor-idea.mp4) · [MP3](songs/c-sharp-minor-idea.mp3) |
 
 ## What it does
 
