@@ -86,6 +86,14 @@ The app binary can test itself from the command line. None of these change your 
 .build/release/Crate --screenshot out.png --demo --colors 11
 ```
 
+## Privacy
+
+Crate collects nothing and makes no connections to the internet. See [PRIVACY.md](PRIVACY.md).
+
 ## License
 
-No license has been chosen yet.
+Copyright (C) 2026 okekedev
+
+The app's source code, the scripts and the sound packs are free software under the GNU General Public License, version 3. See [LICENSE](LICENSE). They come with no warranty.
+
+The two songs in `songs/` are not covered by that license. All rights to them are reserved.
