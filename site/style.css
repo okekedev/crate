@@ -1,0 +1,116 @@
+/* Crate's page. The colours are the app's own palette; the dice swaps them all at once. */
+:root {
+  --window: #1A1C1B; --panel: #242726; --text: #E3E5DF; --small: #A3AAA4; --line: #3E4340;
+  --button: #343837; --button-text: #E3E5DF; --outline: #0B0C0C;
+  --screen: #17120A; --screen-text: #FFB648; --screen-dim: #B07A2A;
+  --accent: #D8482F; --accent-ink: #FFFFFF; --pad2: #E0862A; --pad3: #D9B62A; --pad4: #E9E6DA;
+  --pad2-ink: #14110B; --pad3-ink: #14110B; --pad4-ink: #14110B;
+  --display: "Michroma", "Eurostile", "Arial Black", sans-serif;
+  --body: "Red Hat Text", system-ui, sans-serif;
+  --mono: "Red Hat Mono", ui-monospace, "SF Mono", monospace;
+  --edge: clamp(1.1rem, 4.5vw, 4.5rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--window); color: var(--text); font: 400 1.0625rem/1.55 var(--body); }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-underline-offset: 0.2em; }
+:focus-visible { outline: 2px solid var(--screen-text); outline-offset: 3px; }
+
+/* ---------- The stage: the song itself, standing up in 3D ---------- */
+.stage { position: relative; height: 100svh; min-height: 34rem; background: var(--screen); overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
+#score { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage.flat #score { display: none; }
+.stage.flat { background: var(--screen) url("../songs/lofi-e-minor.jpg") center / cover no-repeat; }
+
+.stage-top { position: relative; padding: clamp(1.2rem, 3.5vw, 2.6rem) var(--edge) 0; max-width: 46rem; pointer-events: none; }
+.wordmark { margin: 0; font: 400 clamp(2.4rem, 7.5vw, 5.4rem)/1 var(--display); letter-spacing: 0.26em; text-transform: uppercase; color: var(--text); }
+.stage h1 { margin: 1.1rem 0 0; font: 500 clamp(1.02rem, 1.55vw, 1.3rem)/1.45 var(--body); max-width: 32ch; color: var(--text); text-wrap: pretty; }
+.stage-top::before { content: ""; position: absolute; inset: -2rem -40% -3rem -2rem; z-index: -1; background: radial-gradient(ellipse at 20% 30%, color-mix(in srgb, var(--screen) 86%, transparent) 0%, transparent 68%); }
+
+/* The deck is the app's own top bar: a readout, then keys. */
+.deck { position: relative; margin: 0 var(--edge) clamp(1rem, 2.6vw, 2rem); padding: 0.75rem; background: var(--panel); border: 1px solid var(--outline); border-radius: 8px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.7rem; align-items: stretch; box-shadow: 0 18px 50px -20px #000a; }
+.lcd { background: var(--screen); color: var(--screen-text); border: 2px solid var(--outline); border-radius: 4px; padding: 0.5rem 0.8rem; font-family: var(--mono); min-width: 0; }
+.lcd-row { display: flex; gap: 1.4rem; justify-content: space-between; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; }
+.lcd-row span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.lcd-status { margin-top: 0.15rem; font-size: clamp(0.95rem, 1.6vw, 1.2rem); font-weight: 500; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.deck-keys { display: flex; gap: 0.45rem; align-items: stretch; flex-wrap: wrap; }
+
+.key { appearance: none; font: 700 0.74rem/1 var(--body); letter-spacing: 0.07em; text-transform: uppercase; color: var(--button-text); background: var(--button); border: 1px solid var(--outline); border-radius: 5px; padding: 0 0.85rem; min-height: 2.6rem; cursor: pointer; white-space: nowrap; }
+.key:hover { filter: brightness(1.14); }
+.key:active { transform: translateY(1px); filter: brightness(0.92); }
+.key[aria-pressed="true"] { background: var(--button-text); color: var(--button); }
+.key-hot { min-width: 5.6rem; }
+.key-hot[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.key-icon { display: grid; place-items: center; padding: 0 0.7rem; }
+
+/* The ruler, numbered by section like the one above the tracks in the app. Click or drag to move the play line. */
+.ruler { grid-column: 1 / -1; position: relative; height: 1.7rem; background: var(--screen); border: 1px solid var(--outline); border-radius: 3px; display: flex; cursor: pointer; touch-action: none; overflow: hidden; }
+.ruler span { flex: var(--w, 1) 0 0; border-left: 1px solid color-mix(in srgb, var(--screen-dim) 55%, transparent); color: var(--screen-text); font: 500 0.66rem/1.7rem var(--mono); padding-left: 0.3rem; pointer-events: none; }
+.ruler span:first-child { border-left: 0; }
+.ruler i { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: var(--accent); pointer-events: none; }
+.ruler i::after { content: ""; position: absolute; top: 0; left: -4px; width: 10px; height: 5px; border-radius: 2px; background: var(--accent); }
+
+/* ---------- The quiet part of the page ---------- */
+.band { padding: clamp(3.5rem, 9vw, 7.5rem) 0; }
+.band-plate { background: var(--panel); border-block: 1px solid var(--outline); }
+.wrap { margin: 0 var(--edge); }
+.two { display: grid; grid-template-columns: minmax(0, 30rem) minmax(0, 1fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.copy { max-width: 30rem; }
+h2 { margin: 0 0 1.1rem; font: 400 clamp(1.35rem, 2.5vw, 2rem)/1.25 var(--display); letter-spacing: 0.01em; text-wrap: balance; }
+h3 { margin: 0 0 0.6rem; font: 700 1.0625rem/1.35 var(--body); }
+p { margin: 0 0 1em; }
+.copy p:last-child { margin-bottom: 0; }
+.note { color: var(--small); font-size: 0.95rem; margin: 0.6rem 0 0; }
+
+/* The asks read off the app's screen. */
+.asks { list-style: none; margin: 0; padding: 1rem 1.2rem; background: var(--screen); border: 2px solid var(--outline); border-radius: 4px; font: 500 clamp(0.95rem, 1.7vw, 1.25rem)/1.5 var(--mono); color: var(--screen-text); align-self: center; }
+.asks li { padding: 0.55rem 0; border-top: 1px solid color-mix(in srgb, var(--screen-dim) 35%, transparent); }
+.asks li:first-child { border-top: 0; }
+.asks li::before { content: "> "; color: var(--screen-dim); }
+
+.swatches { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 2rem 0 1.4rem; }
+.swatch { appearance: none; width: 4.2rem; height: 2.6rem; padding: 0; border: 1px solid var(--outline); border-radius: 5px; cursor: pointer; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; overflow: hidden; background: none; }
+.swatch i { display: block; height: 100%; }
+.swatch[aria-checked="true"] { outline: 2px solid var(--text); outline-offset: 3px; }
+.shot { margin: 0; border: 1px solid var(--outline); border-radius: 8px; overflow: hidden; box-shadow: 0 30px 80px -40px #000c; background: var(--window); }
+
+.packs { border-collapse: collapse; margin-top: 1.8rem; width: 100%; font-size: 0.98rem; }
+.packs th, .packs td { text-align: left; padding: 0.5rem 0; border-top: 1px solid var(--line); font-weight: 400; vertical-align: baseline; }
+.packs th { font-weight: 700; width: 7rem; }
+.packs td:nth-child(2) { width: 3rem; font-family: var(--mono); color: var(--small); }
+.packs td:last-child { color: var(--small); }
+
+.pads { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.55rem; align-self: center; max-width: 34rem; width: 100%; justify-self: end; }
+.pad { appearance: none; position: relative; aspect-ratio: 1 / 0.82; border: 1px solid var(--outline); border-radius: 5px; cursor: pointer; padding: 0.5rem 0.55rem; text-align: left; font: 500 clamp(0.68rem, 1.05vw, 0.84rem)/1.2 var(--mono); display: flex; flex-direction: column; justify-content: space-between; touch-action: manipulation; }
+.pad kbd { font: 500 0.7rem/1 var(--mono); opacity: 0.7; text-transform: uppercase; }
+.pad.down, .pad:active { filter: brightness(0.72); transform: translateY(1px); }
+.pad[data-hue="0"] { background: var(--accent); color: var(--accent-ink); }
+.pad[data-hue="1"] { background: var(--pad2); color: var(--pad2-ink); }
+.pad[data-hue="2"] { background: var(--pad3); color: var(--pad3-ink); }
+.pad[data-hue="3"] { background: var(--pad4); color: var(--pad4-ink); }
+
+.steps { margin: 2.2rem 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 1.6rem; max-width: 56rem; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); column-gap: 0.4rem; }
+.steps li::before { content: counter(step); grid-row: 1 / span 3; font: 400 1.5rem/1.2 var(--display); color: var(--screen-text); }
+.steps li > * { grid-column: 2; }
+.cmd { display: flex; gap: 0.5rem; align-items: stretch; }
+.cmd code { flex: 1 1 auto; min-width: 0; overflow-x: auto; white-space: nowrap; background: var(--screen); color: var(--screen-text); border: 2px solid var(--outline); border-radius: 4px; padding: 0.7rem 0.9rem; font: 400 0.86rem/1.4 var(--mono); }
+
+.foot { padding: 2.2rem 0 3rem; color: var(--small); font-size: 0.95rem; border-top: 1px solid var(--outline); }
+.foot-row { display: flex; flex-wrap: wrap; gap: 0.6rem 2rem; justify-content: space-between; }
+.foot p { margin: 0; }
+
+@media (max-width: 54rem) {
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .pads { justify-self: start; }
+  .pad { aspect-ratio: 1 / 1; font-size: 0.7rem; }
+  .deck { grid-template-columns: minmax(0, 1fr); }
+  .deck-keys .key { flex: 1 1 auto; }
+  .lcd-row { gap: 0.8rem; font-size: 0.72rem; }
+  .lcd-row #lcd-key { display: none; }
+  .cmd { flex-direction: column; }
+  .cmd .key { align-self: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

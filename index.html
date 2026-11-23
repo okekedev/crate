@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crate: a Mac music app you can talk to</title>
+<meta name="description" content="Crate is a small music app for the Mac. Describe a part and Claude writes it in while you listen.">
+<meta property="og:title" content="Crate">
+<meta property="og:description" content="A small music app for the Mac. Describe a part and Claude writes it in while you listen.">
+<meta property="og:image" content="https://okekedev.github.io/crate/docs/crate.png">
+<meta name="theme-color" content="#1A1C1B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Red+Hat+Mono:wght@400;500&family=Red+Hat+Text:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<header class="stage" id="stage">
+  <canvas id="score" aria-hidden="true"></canvas>
+
+  <div class="stage-top">
+    <p class="wordmark">Crate</p>
+    <h1>A music app for the Mac that you can talk to. Describe a part and Claude writes it in while you listen.</h1>
+  </div>
+
+  <div class="deck" aria-label="Player">
+    <div class="lcd" aria-live="polite">
+      <div class="lcd-row">
+        <span id="lcd-title">Lofi E Minor</span>
+        <span id="lcd-bpm">94 BPM</span>
+        <span id="lcd-key">E minor</span>
+        <span id="lcd-bar">65 bars</span>
+      </div>
+      <div class="lcd-status" id="lcd-status">Ready. The song's real notes.</div>
+    </div>
+    <div class="deck-keys">
+      <button class="key key-hot" id="play" type="button">Play</button>
+      <button class="key" type="button" data-song="0" aria-pressed="true">Lofi E Minor</button>
+      <button class="key" type="button" data-song="1" aria-pressed="false">C Sharp Minor Idea</button>
+      <button class="key key-icon" id="dice" type="button" aria-label="Roll the colors" title="Roll the colors">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.3" cy="8.3" r="1.5" fill="currentColor"/><circle cx="15.7" cy="8.3" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8.3" cy="15.7" r="1.5" fill="currentColor"/><circle cx="15.7" cy="15.7" r="1.5" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="ruler" id="ruler" role="slider" tabindex="0" aria-label="Place in the song" aria-valuemin="1" aria-valuemax="65" aria-valuenow="1"></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="band" id="ask">
+    <div class="wrap two">
+      <div class="copy">
+        <h2>Ask for a part. Pick from three.</h2>
+        <p>Open Crate, connect Claude Code, and say what you want in plain words. Each new part comes back as three versions under its track. Click one to hear it in place, keep it, or ask for a change.</p>
+        <p>You don't need Claude to use it. Click notes into the piano roll, or play them on the letter keys.</p>
+      </div>
+      <ul class="asks" aria-label="Things people have asked for">
+        <li>an 8 bar melody in C# minor</li>
+        <li>three versions of a bass that follows the kick</li>
+        <li>lay it out as intro, melody, chorus, melody, close</li>
+        <li>master it and give me three options</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band band-plate" id="colors">
+    <div class="wrap">
+      <div class="copy">
+        <h2>Roll the colors</h2>
+        <p>Every color in the window is yours to set, or let the dice pick. These are palettes the app rolled itself. Choose one and this page wears it too.</p>
+      </div>
+      <div class="swatches" id="swatches" role="radiogroup" aria-label="Color palette"></div>
+      <figure class="shot">
+        <img id="shot" src="docs/crate.png" width="2560" height="1640" alt="The Crate window with a track open: buttons, the level, a piano roll with notes, and the effects below.">
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" id="sounds">
+    <div class="wrap two">
+      <div class="copy">
+        <h2>262 sounds, made from scratch</h2>
+        <p>Five packs of drums, 808s, pads, voices and synths. Every sound is synthesized, and they are all tuned to one note so they move together when the key changes.</p>
+        <p>Tap a pad to hear one, or use the key printed on it.</p>
+        <table class="packs">
+          <tbody>
+            <tr><th scope="row">Starter</th><td>22</td><td>The basics</td></tr>
+            <tr><th scope="row">Lofi</th><td>60</td><td>Dusty drums, soft subs, keys</td></tr>
+            <tr><th scope="row">Midnight</th><td>60</td><td>Late-night R&amp;B and trap</td></tr>
+            <tr><th scope="row">Afterglow</th><td>60</td><td>Retro 80s and synthwave</td></tr>
+            <tr><th scope="row">Blackout</th><td>60</td><td>Dark, hard trap</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pads" id="pads" aria-label="Sample pads"></div>
+    </div>
+  </section>
+
+  <section class="band band-plate" id="setup">
+    <div class="wrap">
+      <div class="copy">
+        <h2>Set it up</h2>
+        <p>Crate is built on your own Mac from the source. There is no signed download yet. You need macOS 14 or later and Apple's command line tools.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Build it</h3>
+          <div class="cmd"><code>git clone https://github.com/okekedev/crate &amp;&amp; cd crate &amp;&amp; ./make-app.sh &amp;&amp; open Crate.app</code><button class="key" type="button" data-copy>Copy</button></div>
+        </li>
+        <li>
+          <h3>Connect Claude Code, if you want it to write for you</h3>
+          <div class="cmd"><code>claude mcp add --transport http crate http://127.0.0.1:8790/mcp</code><button class="key" type="button" data-copy>Copy</button></div>
+          <p class="note">Crate only accepts connections from the same Mac, and only while it is open.</p>
+        </li>
+        <li>
+          <h3>Ask for a part</h3>
+          <p class="note">Start with a key and a length, like the examples above.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <p><a href="https://github.com/okekedev/crate">Source on GitHub</a></p>
+    <p>Built with Claude Code. No license has been chosen yet.</p>
+  </div>
+</footer>
+
+<script type="module" src="site/main.js"></script>
+</body>
+</html>

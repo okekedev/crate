@@ -202,6 +202,12 @@ if let i = args.firstIndex(of: "--selftest"), i + 1 < args.count {     // checks
     }
     exit(0)
 }
+if let i = args.firstIndex(of: "--palettes"), i + 1 < args.count {     // the standard colours and the palettes for the given seeds, as JSON
+    let list = [Palette.standard] + args[i + 1].split(separator: ",").compactMap { UInt64($0) }.map { Palette.random(seed: $0) }
+    let enc = JSONEncoder(); enc.outputFormatting = [.sortedKeys]
+    if let data = try? enc.encode(list), let text = String(data: data, encoding: .utf8) { print(text) }
+    exit(0)
+}
 if let i = args.firstIndex(of: "--screenshot"), i + 1 < args.count {    // a picture of the real window, with its real sliders and menus, drawn off the screen
     MainActor.assumeIsolated {                                          // --demo (the opening song), --song File.crate, or the song last worked on; --colors seed; --open N; --roll; --kit Name; --size WxH
         func value(_ flag: String) -> String? { args.firstIndex(of: flag).flatMap { $0 + 1 < args.count ? args[$0 + 1] : nil } }
