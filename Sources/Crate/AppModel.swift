@@ -46,6 +46,7 @@ final class AppModel: ObservableObject {
     private var savedSong: Song? = nil          // the song as it is in that file, to tell whether anything changed since
     var projectName: String { projectURL?.deletingPathExtension().lastPathComponent ?? "Untitled" }
     var unsaved: Bool { projectURL == nil || savedSong != song }
+    func markSaved() { savedSong = song }       // for pictures of a project: show it as saved
 
     let lib = Library()
     private(set) var engine: Engine?

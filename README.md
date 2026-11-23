@@ -4,6 +4,18 @@ A small music app for the Mac that Claude can play. A song is a stack of tracks.
 
 ![Crate with a track open and the piano roll showing](docs/crate.png)
 
+## Listen
+
+Two songs made in Crate. Each video is the app's own view of the song with the play line moving across it.
+
+**Lofi E Minor** ([MP3](songs/lofi-e-minor.mp3))
+
+<video src="songs/lofi-e-minor.mp4" controls width="100%"></video>
+
+**C Sharp Minor Idea** ([MP3](songs/c-sharp-minor-idea.mp3))
+
+<video src="songs/c-sharp-minor-idea.mp4" controls width="100%"></video>
+
 ## What it does
 
 - **Tracks.** Each track plays one sound. Its effects stay out of the way until you open the track with the pencil.

@@ -203,12 +203,13 @@ if let i = args.firstIndex(of: "--selftest"), i + 1 < args.count {     // checks
     exit(0)
 }
 if let i = args.firstIndex(of: "--screenshot"), i + 1 < args.count {    // a picture of the real window, with its real sliders and menus, drawn off the screen
-    MainActor.assumeIsolated {                                          // --demo (the opening song) or the song last worked on; --colors seed; --open N; --roll; --kit Name; --size WxH
+    MainActor.assumeIsolated {                                          // --demo (the opening song), --song File.crate, or the song last worked on; --colors seed; --open N; --roll; --kit Name; --size WxH
         func value(_ flag: String) -> String? { args.firstIndex(of: flag).flatMap { $0 + 1 < args.count ? args[$0 + 1] : nil } }
         let app = NSApplication.shared
         app.setActivationPolicy(.prohibited); app.finishLaunching()
         let model = AppModel(quiet: true); model.scrolls = true
         if args.contains("--demo") { model.song = AppModel.demo(model.lib); model.projectURL = nil }
+        if let f = value("--song"), let s = AppModel.readProject(URL(fileURLWithPath: f)) { model.song = s; model.projectURL = URL(fileURLWithPath: f); model.markSaved() }      // a project file, shown under its own name
         if let seed = value("--colors").flatMap({ UInt64($0) }) { model.palette = Palette.random(seed: seed) }
         if let n = value("--open").flatMap({ Int($0) }), n >= 1, n <= model.song.tracks.count { model.open = model.song.tracks[n - 1].id }
         if args.contains("--roll") { model.roll = true }
