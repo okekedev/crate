@@ -2,11 +2,13 @@
 
 A small music app for the Mac that Claude can play. A song is a stack of tracks. Each track plays one sound through its own effects, and the patterns come from three places: Claude writes them from what you describe, you play them on the letter keys, or you click them into the piano roll.
 
+**Hear it and watch it play: https://okekedev.github.io/crate/**
+
 ![Crate with a track open and the piano roll showing](docs/crate.png)
 
 ## Listen
 
-Two songs made in Crate. Each video is the app's own view of the song with the play line moving across it. Click a picture to open the video, or take the MP3.
+Two songs made in Crate. They play on [the project page](https://okekedev.github.io/crate/), where the notes move as a 3D score. Here they are as files: each video is the app's own view of the song with the play line moving across it.
 
 | Lofi E Minor | C Sharp Minor Idea |
 |---|---|
