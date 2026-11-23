@@ -1,0 +1,8 @@
+.build/
+Crate.app/
+backups/
+removed-kits/
+__pycache__/
+*.pyc
+.DS_Store
+.swiftpm/
